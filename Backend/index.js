@@ -35,10 +35,7 @@ app.use(express.json())
 // Mongo url -> mongodb+srv://swayam:=@cluster0.drmecaq.mongodb.net/?retryWrites=true&w=majority
 
 // Connect to our online mongodb database
-mongoose.connect('mongodb+srv://swayam:=@cluster0.drmecaq.mongodb.net/?retryWrites=true&w=majority', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
+mongoose.connect('mongodb+srv://swayam:11223344=@cluster0.drmecaq.mongodb.net/?retryWrites=true&w=majority').then(() => {
     console.log("DB Connection Sucessfull");
     db = mongoose.connection
 }).catch(err => {
@@ -56,6 +53,7 @@ const Todo = mongoose.model('Todo', TodoSchema)
 
 
 // If you have confidential or sensitive data use a post method
+// Adding an item in DB
 app.post('/v1/todo/add', async (req,res) => {
     try{
         await Todo.create(req.body)
@@ -65,6 +63,17 @@ app.post('/v1/todo/add', async (req,res) => {
         console.log(err);
         res.send("error")
 
+    }
+})
+
+
+// Get All The Items from DB
+app.post('v1/todo/all', async (req, res) => {
+    try{
+        const todo = await Todo.find()
+        res.json(todo)
+    }catch(err){
+        res.json({error: err})
     }
 })
 
